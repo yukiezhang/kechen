@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程开发工具导航 | 专业教学设计资源</title>
+    <style>
+        :root {
+            --primary-dark: #0f1a30;
+            --primary-purple: #7b4bff;
+            --primary-light-purple: #9370FF;
+            --text-light: #ffffff;
+            --text-gray: #a0a0a0;
+            --background-light: #f5f7fb;
+            --card-bg: #ffffff;
+            --border-color: #e1e4e8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-light);
+            color: var(--primary-dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            background-color: var(--primary-purple);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-purple);
+        }
+        
+        .btn {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-light-purple);
+        }
+        
+        .hero {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero h1 span {
+            color: var(--primary-purple);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--text-gray);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--text-gray);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .category-header {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-purple);
+            padding-bottom: 0.5rem;
+        }
+        
+        .category-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .category-header p {
+            color: var(--text-gray);
+            margin-top: 0.5rem;
+        }
+        
+        .tool-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-card::after {
+            content: "访问官网 →";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-purple);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .tool-card:hover::after {
+            transform: translateY(0);
+        }
+        
+        .tool-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .tag {
+            background-color: #f0f0f0;
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .tag-free {
+            background-color: #e3f9e5;
+            color: #0d8019;
+        }
+        
+        .tag-paid {
+            background-color: #fff8e6;
+            color: #b86200;
+        }
+        
+        .tag-subscription {
+            background-color: #e6f3ff;
+            color: #0062cc;
+        }
+        
+        .tool-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .best-for {
+            background-color: #f8f9fa;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .best-for span {
+            color: var(--primary-dark);
+            font-weight: 500;
+        }
+        
+        .guide-section {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .guide-card {
+            background-color: var(--background-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .guide-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary-purple);
+            padding-bottom: 0.5rem;
+        }
+        
+        .faq-section {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .faq-answer {
+            color: var(--text-gray);
+        }
+        
+        .about-section {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            padding: 3rem 0;
+        }
+        
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+        
+        .about-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+        
+        .about-content h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--primary-purple);
+        }
+        
+        .about-content p {
+            margin-bottom: 1rem;
+            color: var(--text-gray);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-icon {
+            color: var(--primary-purple);
+        }
+        
+        .testimonials {
+            background-color: var(--background-light);
+            padding: 3rem 0;
+        }
+        
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .testimonial-position {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+        
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        footer a {
+            color: var(--primary-purple);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                </div>
+                课程开发工具导航
+            </a>
+            <div class="nav-links">
+                <a href="#tools">工具导航</a>
+                <a href="#faq">常见问题</a>
+                <a href="#about">关于我</a>
+            </div>
+            <button class="btn" onclick="scrollToAbout()">联系我</button>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>课程开发工具<span>导航站</span></h1>
+            <p>汇集当前最佳的教学设计和课程开发工具，帮助教育工作者、课程设计师和学习体验开发人员创建高效、吸引人的学习内容。</p>
+        </div>
+    </section>
+
+    <main class="container" id="tools">
+        <h2 class="section-title">工具导航</h2>
+        <p class="section-subtitle">我精心筛选的课程开发工具，让您的教学设计工作事半功倍</p>
+
+        <div class="tools-grid">
+            <!-- 内容开发辅助工具 -->
+            <div class="category-header">
+                <h2>1. 内容开发辅助工具</h2>
+                <p>这些AI驱动的工具可帮助您更快地创建高质量课程内容，从构思到实现，大幅提升内容开发效率。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.deepseek.com', '_blank')">
+                <h3>DeepSeek</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-paid">付费API</span>
+                </div>
+                <p>AI对话与内容生成工具，支持多语言，擅长技术内容。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 技术课程开发、代码示例生成、复杂概念解释
+                </div>
+            </div>
+            
+            <div class="tool-card" onclick="window.open('https://kimi.moonshot.cn', '_blank')">
+                <h3>Kimi</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                  
+                </div>
+                <p>智能AI助手，提供多语言支持，用户友好界面。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 多语言内容创建、内容本地化、简短解释生成
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.doubao.com', '_blank')">
+                <h3>豆包</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+            
+                </div>
+                <p>多模态交互：支持图片理解、语音输入</p>
+                <div class="best-for">
+                    <span>最适合：</span> 短视频脚本、营销文案
+                </div>
+            </div>
+
+            
+
+            
+
+            <!-- 数字人/虚拟形象 -->
+            <div class="category-header">
+                <h2>2. 数字人/虚拟形象</h2>
+                <p>数字人技术让您无需传统摄影设备，即可创建专业的虚拟讲师和演示视频，特别适合远程和异步学习环境。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://zenvideo.qq.com', '_blank')">
+                <h3>腾讯智影</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>提供课件讲解、知识科普等模板，支持PPT一键转视频。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 社交媒体传播的轻量化知识内容，K12学科动画微课、职业教育短视频
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.youyan3d.com', '_blank')">
+                <h3>魔珐有言</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>提供二次元、国风等形象，输入知识点自动生成配套案例。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 教学类课程、游戏化学习场景
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.guiji.ai/#/index', '_blank')">
+                <h3>硅基智能</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>高度真实的虚拟人物，可上传真人教师视频克隆其形象和声音。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 知识付费类课程的批量制作，以及业培训内容、品牌化教学内容
+                </div>
+            </div>
+
+            <!-- 动画 -->
+            <div class="category-header">
+            <h2>3. 动画制作工具</h2>
+            <p>动画是解释复杂概念的强大媒介，这些工具让您无需高级动画技能即可创建生动的教学动画。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.laihua.com/', '_blank')">
+                <h3>来画</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>支持数字人+动画混合制作，适合模拟板书讲解，可直接将PPT转换为动画视频。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 快速制作抖音/微信端的知识短视频
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.animiz.cn/', '_blank')">
+                <h3>万彩动画大师</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>提供海量教育类模板（课件、微课、科普动画），拖拽即可修改。</p>
+                <div class="best-for">
+                    <span>最适合：</span> K12学科动画、企业培训微课
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.vyond.com/', '_blank')">
+                <h3>Vyond</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>专业级动画：角色动作流畅，支持场景切换、镜头运动等电影级效果。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 高等教育/职业培训的复杂概念演示，企业合规培训动画
+                </div>
+            </div>
+
+            <!-- 视频剪辑 -->
+            <div class="category-header">
+                <h2>4. 视频剪辑工具</h2>
+                <p>视频编辑工具帮助您将原始素材转化为引人入胜的教学内容，从基础修剪到高级后期制作。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.capcut.cn/', '_blank')">
+                <h3>剪映（CapCut）</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                </div>
+                <p>含AI智能工具，一键抠像、自动字幕生成等，手机/PC无缝协作，适合随时随地剪辑。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 短视频式微课、教师真人出镜+动画结合的混合剪辑
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.blackmagicdesign.com/products/davinciresolve/', '_blank')">
+                <h3>DaVinci Resolve</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>调色功能行业顶尖，支持8K剪辑。内置"课程项目"管理功能，适合分章节剪辑。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 电影级调色的精品课程（如艺术类教学），长课时视频的精细化分段剪辑
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.adobe.com/products/premiere.html', '_blank')">
+                <h3>Adobe Premiere Pro</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>专业级剪辑工具，可与After Effects、Audition联动制作复杂特效。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 高质量课程宣传片或纪录片式教学视频，需要精细剪辑的专业培训课程
+                </div>
+            </div>
+
+            <!-- PPT设计 -->
+            <div class="category-header">
+                <h2>5. PPT设计工具</h2>
+                <p>精心设计的演示文稿可以提升学习体验，让复杂信息更容易理解和记忆。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.woodo.cn/', '_blank')">
+                <h3>吾道</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>AI内容优化：输入大纲后自动扩展文案；支持PPT转H5课件，方便移动端学习</p>
+                <div class="best-for">
+                    <span>最适合：</span> 小组协作式课程项目展示、需要数据可视化的研究报告PPT
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://gamma.app/', '_blank')">
+                <h3>Gamma</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>自然语言生成PPT，支持生成可滚动的网页版PPT</p>
+                <div class="best-for">
+                    <span>最适合：</span> 翻转课堂预习材料、知识科普轻量课件
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.chat-ppt.com/', '_blank')">
+                <h3>ChatPPT</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>内置教育模板库，支持Markdown输入，程序员/教师友好</p>
+                <div class="best-for">
+                    <span>最适合：</span> 教师快速制作日常教学课件、学生课堂、汇报PPT辅助生成
+                </div>
+            </div>
+
+            <!-- 互动课件制作 -->
+            <div class="category-header">
+                <h2>6. 互动课件制作工具</h2>
+                <p>互动元素可以提高学习参与度和知识保留率，以下工具帮助您创建富有互动性的学习体验。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://articulate.com/', '_blank')">
+                <h3>Articulate 360</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>专业级交互设计：支持拖拽式交互，支持复杂交互逻辑，内置大量教育类模板</p>
+                <div class="best-for">
+                    <span>最适合：</span> 适合制作高互动性、游戏化学习内容。企业培训课程、高等教育复杂交互课件
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://h5p.org/', '_blank')">
+                <h3>H5P</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                </div>
+                <p>轻量化交互：支持嵌入式互动元素</p>
+                <div class="best-for">
+                    <span>最适合：</span> K12 趣味互动练习
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://www.ispringsolutions.com/', '_blank')">
+                <h3>iSpring Suite</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>直接基于 PowerPoint 制作互动课件，保留原有设计习惯。支持 14 种题型，自动评分</p>
+                <div class="best-for">
+                    <span>最适合：</span> 标准化考试题库课件、软件操作培训
+                </div>
+            </div>
+
+            <!-- 评估与测验工具 -->
+            <div class="category-header">
+                <h2>7. 评估与测验工具</h2>
+                <p>有效的评估工具可以衡量学习效果、提供及时反馈，并指导后续教学调整。</p>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://kahoot.com/', '_blank')">
+                <h3>Kahoot!</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>游戏化竞答，提供数学、科学等学科预设题库，支持图片/视频插入。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 课堂热身测验、知识点复习、大型线下活动
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://quizizz.com/', '_blank')">
+                <h3>Quizizz</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>题目支持数学公式和LaTeX输入。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 课后作业、自学检测、语法练习、术语记忆类内容
+                </div>
+            </div>
+
+            <div class="tool-card" onclick="window.open('https://quizlet.com/', '_blank')">
+                <h3>Quizlet</h3>
+                <div class="tool-tags">
+                    <span class="tag tag-free">免费版</span>
+                    <span class="tag tag-subscription">付费版</span>
+                </div>
+                <p>多模态记忆：卡片（Flashcards）+游戏+测试+朗读四重模式。</p>
+                <div class="best-for">
+                    <span>最适合：</span> 单词/术语背诵、历史事件时间轴记忆
+                </div>
+            </div>
+
+            
+
+
+
+            <!-- 可以继续添加更多工具类别和工具卡片 -->
+            
+        </div>
+
+        
+
+        <div class="faq-section"  id="faq">
+            <h2 class="section-title">常见问题 (FAQ)</h2>
+            
+            <div class="faq-item">
+                <p class="faq-question">Q: 我的预算有限，应该使用哪些工具?</p>
+                <p class="faq-answer">A: 优先考虑内容创建类工具，因为内容质量直接决定课程质量。</p>
+            </div>
+            
+            <div class="faq-item">
+                <p class="faq-question">Q: 我是初学者，应该从哪里开始?</p>
+                <p class="faq-answer">A: 首先明确您的课程目标和受众需求，从学习者出发设计授课内容。然后从易用的工具开始，随着经验增长再尝试更专业的工具。</p>
+            </div>
+            
+            <div class="faq-item">
+                <p class="faq-question">Q: 如何选择合适的工具？</p>
+                <p class="faq-answer">A: 每个人的使用习惯有差异，可以多试用上述推荐的工具，找到适合自己的。</p>
+            </div>
+            
+            <div class="faq-item">
+                <p class="faq-question">Q: 内容创作方面有没有现成的提示词或者模板？</p>
+                <p class="faq-answer">A: 根据行业、学习类型等不同，提示词会有差异。如需通用版的提示词和课程设计模板，可在下方联系我。</p>
+            </div>
+        </div>
+    </main>
+
+    <section class="about-section" id="about">
+        <div class="about-container">
+            <div class="about-content">
+                <h2>关于我</h2>
+                <p>拥有超过7年的教学设计和课程开发经验，我曾帮助众多组织在各种平台上创建有效的学习体验/课程。</p>
+                
+                <h3>我的专长</h3>
+                <ul>
+                    <li>全周期教学设计: 从需求评估到评价，涵盖ADDIE模型的所有阶段</li>
+                    <li>教育技术整合: 精通为特定学习目标选择和实施合适工具</li>
+                    <li>创新学习策略: 将传统教学法与前沿学习方法相结合</li>
+                </ul>
+            </div>
+            
+            <div class="about-content">
+                <h3>我能提供的帮助</h3>
+                <ul>
+                    <li>免费资源: 获取我收集的教学设计模板/资源/提示词库</li>
+                    <li>咨询服务: 获得针对您课程开发项目的个性化建议</li>
+                    <li>定制课程开发: 提供根据您特定需求和受众定制专业课程</li>
+                </ul>
+                
+                <h3>联系方式</h3>
+                <div class="contact-info" id="contact">
+                    <div class="contact-item">
+                        <span class="contact-icon">✉️</span>
+                        <span>kechen11@yeah.net</span>
+                    <div class="contact-item">
+                        <span class="contact-icon">💬</span>
+                        <span>WeChat: Xiaomahua788</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="testimonials-container">
+            <h2 class="section-title">客户评价</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"作为一名教学设计师，这些工具推荐让我的工作效率提高了至少50%。特别推荐deepseek和Articulate Rise的组合。"</p>
+                    <p class="testimonial-author">Sarah L.</p>
+                    <p class="testimonial-position">企业培训主管</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"从未想过课程开发可以如此简单高效。感谢这些工具推荐和个性化咨询服务。"</p>
+                    <p class="testimonial-author">Mark T.</p>
+                    <p class="testimonial-position">在线教育创业者</p>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"专业的教学设计视角真正帮助我们开发了高质量的课程。"</p>
+                    <p class="testimonial-author">Priya K.</p>
+                    <p class="testimonial-position">教育科技公司产品经理</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 课程开发工具导航 | 专业教学设计资源</p>
+        <p>所有推荐基于个人经验和专业判断 | <a href="#">隐私政策</a> | <a href="#">联系我</a></p>
+    </footer>
+
+    <script>
+        // 平滑滚动到锚点的JavaScript
+        document.querySelectorAll
