@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具导航 - 课程开发工具导航站</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        /* 配色方案 - 保持与主页一致 */
+        :root {
+            --primary-color: #FF4B91;
+            --secondary-color: #5271FF;
+            --accent-color: #FFC83D;
+            --tertiary-color: #00D1C5;
+            --dark-color: #2E1A47;
+            --light-color: #FFFFFF;
+            --bg-color: #F5F0FF;
+            --card-bg: #FFFFFF;
+            --border-color: #E1E4E8;
+            --tag-bg: #f0f0f0;
+        }
+        
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Memphis风格元素 - 保持与主页一致 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 10% 20%, var(--accent-color) 0.8%, transparent 0.8%),
+                radial-gradient(circle at 30% 70%, var(--tertiary-color) 1%, transparent 1%),
+                radial-gradient(circle at 70% 40%, var(--primary-color) 0.8%, transparent 0.8%),
+                radial-gradient(circle at 90% 90%, var(--secondary-color) 1%, transparent 1%);
+            background-size: 200px 200px;
+            background-position: 0 0, 80px 120px, 160px 50px, 200px 150px;
+        }
+        
+        .memphis-dot {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        .memphis-zigzag {
+            position: absolute;
+            width: 120px;
+            height: 20px;
+            z-index: -1;
+        }
+        
+        .memphis-square {
+            position: absolute;
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background-color: var(--dark-color);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(46, 26, 71, 0.2);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            padding: 3rem 0 1.5rem;
+            color: var(--dark-color);
+            position: relative;
+        }
+        
+        .page-title h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background-color: var(--primary-color);
+        }
+        
+        .page-title p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        
+        /* 筛选导航 - 基于图片2样式 - 更新圆角和文字 */
+        .filter-nav {
+            padding: 0.8rem 1rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 1.5rem auto;
+            background-color: white;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .filter-list {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        
+        .filter-item {
+            padding: 0.7rem 1.2rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border-radius: 50px;
+            margin: 0 0.5rem;
+            white-space: nowrap;
+            font-size: 1.05rem;
+        }
+        
+        .filter-item:hover {
+            color: var(--primary-color);
+        }
+        
+        .filter-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* 工具分类和卡片之间的间距 */
+        .tools-container {
+            max-width: 1200px;
+            margin: 2rem auto 5rem;
+            padding: 0 2rem;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            margin: 3rem 0 1.5rem;
+            color: var(--dark-color);
+            position: relative;
+            padding-left: 1.2rem;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        /* 工具卡片设计 - 调整标题和标签顺序 */
+        .tool-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 2px solid var(--border-color);
+        }
+        
+        
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tool-content {
+            padding: 1.5rem 1.5rem 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .tool-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        .tool-badge-container {
+            display: flex;
+            margin: 0 0 1rem 0;
+            gap: 0.5rem;
+        }
+        
+        .tool-badge {
+            background-color: rgba(73, 208, 145, 0.15);
+            color: #1B8D5A;
+            padding: 0.3rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .tool-badge.api {
+            background-color: rgba(255, 153, 0, 0.15);
+            color: #FF9900;
+        }
+        
+        .tool-desc {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+        
+        .tool-best-for {
+            margin-top: auto;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 0.8rem;
+            margin-bottom: 0;
+        }
+        
+        .tool-best-for-label {
+            color: #555;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .tool-best-for-content {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+        
+        /* 新的访问官网悬停效果 */
+        .tool-link-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tool-card:hover .tool-link-container {
+            opacity: 1;
+        }
+        
+        .tool-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+        
+        .tool-link:after {
+            content: " →";
+            margin-left: 5px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            top: -100px;
+            left: 10%;
+            opacity: 0.1;
+        }
+        
+        .footer::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 10px;
+            background-color: var(--accent-color);
+            bottom: 30px;
+            right: 10%;
+            opacity: 0.3;
+            transform: rotate(-5deg);
+        }
+        
+        .footer p {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .social-links li {
+            margin: 0 1.2rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-links a:hover {
+            color: var(--dark-color);
+            background-color: var(--primary-color);
+        }
+        
+        /* 筛选功能样式 */
+        .tool-category {
+            display: none; /* 默认隐藏所有类别 */
+        }
+        
+        .tool-category.active {
+            display: block; /* 显示激活的类别 */
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .filter-list {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-item {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .tool-image {
+                height: 150px;
+            }
+            
+            .tool-content {
+                padding: 1.2rem;
+            }
+            
+            .tool-title {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* "返回顶部"按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Memphis风格元素 -->
+    <div class="memphis-dot" id="dot1"></div>
+    <div class="memphis-dot" id="dot2"></div>
+    <div class="memphis-dot" id="dot3"></div>
+    <div class="memphis-zigzag" id="zigzag1"></div>
+    <div class="memphis-zigzag" id="zigzag2"></div>
+    <div class="memphis-square" id="square1"></div>
+    <div class="memphis-square" id="square2"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">课程<span>开发</span>工具</a>
+        <ul class="nav-links">
+           
+            <li><a href="tools.html" class="active">工具导航</a></li>
+            <li><a href="ai-prompts.html">AI提示词库</a></li>
+            <li><a href="templates.html">资源模板</a></li>
+            <li><a href="faq.html">常见问题</a></li>
+            <li><a href="about.html">关于本站</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 页面标题 -->
+    <div class="page-title">
+        <h1>课程开发工具导航</h1>
+        <p>精心筛选的专业工具库，助力您的课程开发更高效、更创新</p>
+    </div>
+    
+    <!-- 筛选导航 -->
+    <div class="filter-nav">
+        <ul class="filter-list">
+            <li class="filter-item active" data-filter="all">全部工具</li>
+            <li class="filter-item" data-filter="content-dev">内容开发</li>
+            <li class="filter-item" data-filter="digital-human">数字人/虚拟形象</li>
+            <li class="filter-item" data-filter="animation">动画制作</li>
+            <li class="filter-item" data-filter="video-edit">视频剪辑</li>
+            <li class="filter-item" data-filter="ppt">PPT设计</li>
+            <li class="filter-item" data-filter="interactive">互动课件</li>
+            <li class="filter-item" data-filter="assessment">评估与测验</li>
+        </ul>
+    </div>
+    
+    <!-- 工具卡片区域 -->
+    <div class="tools-container">
+        
+        <!-- 内容开发辅助工具 -->
+        <div class="tool-category active" id="content-dev">
+            <h2 class="category-title">内容开发辅助工具</h2>
+            <div class="tools-grid">
+                <!-- 工具1 - DeepSeek -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">DeepSeek</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">AI对话与内容生成工具，支持多语言，擅长技术内容。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">技术课程开发、代码示例生成、复杂概念解释</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://deepseek.com" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+                
+                <!-- 工具2 - Kimi -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">Kimi</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                        </div>
+                        <p class="tool-desc">智能AI助手，提供多语言支持，用户友好界面。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">多语言内容创建、内容本地化、简短解释生成</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://kimi.moonshot.cn" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+                
+                <!-- 工具3 - 豆包 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">豆包</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                        </div>
+                        <p class="tool-desc">多模态交互：支持图片理解、语音输入</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">短视频脚本、营销文案</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.doubao.com" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- 数字人 -->
+        <div class="tool-category" id="digital-human">
+            <h2 class="category-title">数字人</h2>
+            <div class="tools-grid">
+                <!-- 工具1 - 腾讯智影 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">腾讯智影</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">提供课件讲解、知识科普等模板，支持PPT一键转视频。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">社交媒体传播的轻量化知识内容，K12学科动画微课、职业教育短视频。</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://zenvideo.qq.com" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+                
+                <!-- 工具2 - 魔珐有言 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">魔珐有言</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">提供二次元、国风等形象，吸引低龄学习者，输入知识点自动生成配套案例。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">教学类课程、游戏化学习场景</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.youyan3d.com" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+                
+                <!-- 工具3 - 硅基智能 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">硅基智能</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">上传真人教师视频即可克隆其形象和声音。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">知识付费类课程的批量制作</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.guiji.ai/#/index" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 其他类别占位 -->
+        <div class="tool-category" id="animation">
+            <h2 class="category-title">动画制作</h2>
+            <div class="tools-grid">
+                <!-- 动画制作工具将放置在这里 -->
+                 <!-- 工具1 - 来画 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">来画</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">支持数字人+动画混合制作。独有的白板动画模式，适合模拟板书讲解。可直接将PPT转换为动画视频。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">快速制作抖音/微信端的知识短视频</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.laihua.com/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+                
+                <!-- 工具2 - 万彩动画大师 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">万彩动画大师</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">提供海量教育类模板（课件、微课、科普动画），拖拽即可修改</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">K12学科动画、企业培训微课。</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.animiz.cn/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+
+                <!-- 工具3 - Vyond -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">Vyond</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">专业级动画：角色动作流畅，支持场景切换、镜头运动等电影级效果。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">高等教育/职业培训的复杂概念演示、企业合规培训动画</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.vyond.com/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        
+        <div class="tool-category" id="video-edit">
+            <h2 class="category-title">视频剪辑</h2>
+            <div class="tools-grid">
+                 <!-- 工具1 - 剪映（CapCut） -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">剪映（CapCut）</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                        </div>
+                        <p class="tool-desc">含AI智能工具：一键抠像、自动字幕生成、语音转字幕。手机/PC/平板无缝协作，适合随时随地剪辑。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">短视频式微课、教师真人出镜+动画结合的混合剪辑。</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.capcut.cn/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+        
+                <!-- 工具2 - DaVinci Resolve -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">DaVinci Resolve</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">调色功能行业顶尖，支持8K剪辑。内置"课程项目"管理功能，适合分章节剪辑。</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">需要电影级调色的精品课程（如艺术类教学），长课时视频的精细化分段剪辑</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.blackmagicdesign.com/products/davinciresolve/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+        
+                <!-- 工具3 - Adobe Premiere Pro -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">Adobe Premiere Pro</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">专业级剪辑工具可与After Effects、Audition联动制作复杂特效</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">高质量课程宣传片或纪录片式教学视频。需要精细剪辑的专业培训课程（如影视制作类）</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.adobe.com/products/premiere.html" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tool-category" id="ppt">
+            <h2 class="category-title">PPT设计</h2>
+            <div class="tools-grid">
+                <!-- 工具1 - 吾道 -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">吾道</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">AI内容优化：输入大纲后自动扩展文案；支持PPT转H5课件，方便移动端学习</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">小组协作式课程项目展示、需要数据可视化的研究报告PPT</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.woodo.cn/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+        
+                <!-- 工具2 - Gamma -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">Gamma</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">自然语言生成PPT，支持生成可滚动的网页版PPT</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">翻转课堂预习材料、知识科普轻量课件</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://gamma.app/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+        
+                <!-- 工具3 - ChatPPT -->
+                <div class="tool-card">
+                    <div class="tool-content">
+                        <h3 class="tool-title">ChatPPT</h3>
+                        <div class="tool-badge-container">
+                            <span class="tool-badge">免费版</span>
+                            <span class="tool-badge api">付费版</span>
+                        </div>
+                        <p class="tool-desc">内置教育模板库，支持Markdown输入，程序员教师友好</p>
+                        <div class="tool-best-for">
+                            <div class="tool-best-for-label">最适合：</div>
+                            <div class="tool-best-for-content">教师快速制作日常教学课件、学生课堂汇报PPT辅助生成</div>
+                        </div>
+                    </div>
+                    <div class="tool-link-container">
+                        <a href="https://www.chat-ppt.com/" target="_blank" class="tool-link">访问官网</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tool-category" id="interactive">
+            <h2 class="category-title">互动课件</h2>
+            <div class="tools-grid">
+                <!-- 互动课件工具将放置在这里 -->
+                  <!-- 工具1 - Articulate 360 -->
+                    <div class="tool-card">
+                        <div class="tool-content">
+                            <h3 class="tool-title">Articulate 360</h3>
+                            <div class="tool-badge-container">
+                                <span class="tool-badge">免费版</span>
+                                <span class="tool-badge api">付费版</span>
+                            </div>
+                            <p class="tool-desc">专业级交互设计：支持拖拽式交互，支持复杂交互逻辑。内置大量教育类模板</p>
+                            <div class="tool-best-for">
+                                <div class="tool-best-for-label">最适合：</div>
+                                <div class="tool-best-for-content">适合制作高互动性、游戏化学习内容。企业培训课程、高等教育复杂交互课件</div>
+                            </div>
+                        </div>
+                        <div class="tool-link-container">
+                            <a href="https://articulate.com/" target="_blank" class="tool-link">访问官网</a>
+                        </div>
+                    </div>
+        
+                    <!-- 工具2 - H5P -->
+                    <div class="tool-card">
+                        <div class="tool-content">
+                            <h3 class="tool-title">H5P</h3>
+                            <div class="tool-badge-container">
+                                <span class="tool-badge">免费版</span>
+                            </div>
+                            <p class="tool-desc">轻量化交互：支持嵌入式互动元素</p>
+                            <div class="tool-best-for">
+                                <div class="tool-best-for-label">最适合：</div>
+                                <div class="tool-best-for-content">K12 趣味互动练习</div>
+                            </div>
+                        </div>
+                        <div class="tool-link-container">
+                            <a href="https://h5p.org/" target="_blank" class="tool-link">访问官网</a>
+                        </div>
+                    </div>
+        
+                    <!-- 工具3 - iSpring Suite -->
+                    <div class="tool-card">
+                        <div class="tool-content">
+                            <h3 class="tool-title">iSpring Suite</h3>
+                            <div class="tool-badge-container">
+                                <span class="tool-badge">免费版</span>
+                                <span class="tool-badge api">付费版</span>
+                            </div>
+                            <p class="tool-desc">直接基于 PowerPoint 制作互动课件，保留原有设计习惯。支持 14 种题型，自动评分</p>
+                            <div class="tool-best-for">
+                                <div class="tool-best-for-label">最适合：</div>
+                                <div class="tool-best-for-content">标准化考试题库课件、软件操作培训</div>
+                            </div>
+                        </div>
+                        <div class="tool-link-container">
+                            <a href="https://www.ispringsolutions.com/" target="_blank" class="tool-link">访问官网</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        
+        <div class="tool-category" id="assessment">
+            <h2 class="category-title">评估与测验</h2>
+            <div class="tools-grid">
+                <!-- 评估与测验工具将放置在这里 -->
+                    <!-- 工具1 - Kahoot! -->
+                    <div class="tool-card">
+                        <div class="tool-content">
+                            <h3 class="tool-title">Kahoot!</h3>
+                            <div class="tool-badge-container">
+                                <span class="tool-badge">免费版</span>
+                                <span class="tool-badge api">付费版</span>
+                            </div>
+                            <p class="tool-desc">游戏化竞答，提供数学、科学等学科预设题库，支持图片/视频插入。</p>
+                            <div class="tool-best-for">
+                                <div class="tool-best-for-label">最适合：</div>
+                                <div class="tool-best-for-content">课堂热身测验、知识点复习、大型线下活动</div>
+                            </div>
+                        </div>
+                        <div class="tool-link-container">
+                            <a href="https://kahoot.com/" target="_blank" class="tool-link">访问官网</a>
+                        </div>
+                    </div>
+        
+                    <!-- 工具2 - Quizizz -->
+                    <div class="tool-card">
+                        <div class="tool-content">
+                            <h3 class="tool-title">Quizizz</h3>
+                            <div class="tool-badge-container">
+                                <span class="tool-badge">免费版</span>
+                                <span class="tool-badge api">付费版</span>
+                            </div>
+                            <p class="tool-desc">题目支持数学公式和LaTeX输入</p>
+                            <div class="tool-best-for">
+                                <div class="tool-best-for-label">最适合：</div>
+                                <div class="tool-best-for-content">课后作业、自学检测、语法练习、术语记忆类内容。</div>
+                            </div>
+                        </div>
+                        <div class="tool-link-container">
+                            <a href="https://quizizz.com/" target="_blank" class="tool-link">访问官网</a>
+                        </div>
+                    </div>
+        
+                    <!-- 工具3 - Quizlet -->
+                    <div class="tool-card">
+                        <div class="tool-content">
+                            <h3 class="tool-title">Quizlet</h3>
+                            <div class="tool-badge-container">
+                                <span class="tool-badge">免费版</span>
+                                <span class="tool-badge api">付费版</span>
+                            </div>
+                            <p class="tool-desc">多模态记忆：卡片（Flashcards）+游戏+测试+朗读四重模式。</p>
+                            <div class="tool-best-for">
+                                <div class="tool-best-for-label">最适合：</div>
+                                <div class="tool-best-for-content">单词/术语背诵、历史事件时间轴记忆</div>
+                            </div>
+                        </div>
+                        <div class="tool-link-container">
+                            <a href="https://quizlet.com/" target="_blank" class="tool-link">访问官网</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        
+       
+    </div>
+    
+
+
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top">↑</div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>© 2025 课程开发工具导航站 | 专业教学设计资源</p>
+        <p>本站保留所有解释权</p>
+    </footer>
+    
+
+    <script>
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault(); // Disables right-click
+        });
+    </script>
+    
+    <script>
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) { // F12
+                return false;
+            } else if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { // Ctrl + Shift + I
+                return false;
+            }
+        }
+    </script>
+
+
+    <!-- JavaScript -->
+    <script>
+        // 筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+    const filterItems = document.querySelectorAll('.filter-item');
+    const toolCategories = document.querySelectorAll('.tool-category');
+    
+    // 初始化时显示所有类别
+    showAllCategories();
+    
+    // 显示所有类别的函数
+    function showAllCategories() {
+        toolCategories.forEach(category => {
+            category.classList.add('active');
+        });
+    }
+    
+    // 筛选功能
+    filterItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // 移除所有active类
+            filterItems.forEach(filter => filter.classList.remove('active'));
+            toolCategories.forEach(category => category.classList.remove('active'));
+            
+            // 添加active类到当前选中项
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            // 如果选择"全部"，则显示所有类别
+            if (filter === 'all') {
+                showAllCategories();
+            } else {
+                // 否则只显示所选类别
+                const selectedCategory = document.getElementById(filter);
+                if (selectedCategory) {
+                    selectedCategory.classList.add('active');
+                }
+            }
+            
+            // 滚动到工具区域
+            const toolsContainer = document.querySelector('.tools-container');
+            toolsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+            
+            // 返回顶部按钮功能
+            const backToTopBtn = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+
+    </script>
+</body>
+</html>

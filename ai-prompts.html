@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI提示词库 - 课程开发工具导航站</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        /* 配色方案 - 保持与主页一致 */
+        :root {
+            --primary-color: #FF4B91;
+            --secondary-color: #5271FF;
+            --accent-color: #FFC83D;
+            --tertiary-color: #00D1C5;
+            --dark-color: #2E1A47;
+            --light-color: #FFFFFF;
+            --bg-color: #F5F0FF;
+            --card-bg: #FFFFFF;
+            --border-color: #E1E4E8;
+            --tag-bg: #f0f0f0;
+            
+            /* 分类色彩编码 */
+            --category-1-color: #FF4B91; /* 选题定位 */
+            --category-2-color: #5271FF; /* 内容萃取 */
+            --category-3-color: #FFC83D; /* 课程大纲提炼 */
+            --category-4-color: #00D1C5; /* 逐字稿撰写 */
+            --category-5-color: #9D4EDD; /* 课程优化提升 */
+            --category-6-color: #FF9966; /* 营销与传播 */
+            --category-7-color: #4CAF50; /* 定制化提示词 */
+        }
+        
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Memphis风格元素 - 保持与主页一致 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 10% 20%, var(--accent-color) 0.8%, transparent 0.8%),
+                radial-gradient(circle at 30% 70%, var(--tertiary-color) 1%, transparent 1%),
+                radial-gradient(circle at 70% 40%, var(--primary-color) 0.8%, transparent 0.8%),
+                radial-gradient(circle at 90% 90%, var(--secondary-color) 1%, transparent 1%);
+            background-size: 200px 200px;
+            background-position: 0 0, 80px 120px, 160px 50px, 200px 150px;
+        }
+        
+        .memphis-dot {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        .memphis-zigzag {
+            position: absolute;
+            width: 120px;
+            height: 20px;
+            z-index: -1;
+        }
+        
+        .memphis-square {
+            position: absolute;
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background-color: var(--dark-color);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(46, 26, 71, 0.2);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            padding: 3rem 0 1.5rem;
+            color: var(--dark-color);
+            position: relative;
+        }
+        
+        .page-title h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background-color: var(--primary-color);
+        }
+        
+        .page-title p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        
+        /* 主分类导航 */
+        .category-nav {
+            padding: 0.8rem 1rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 1.5rem auto;
+            background-color: white;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .category-list {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            list-style: none;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        
+        .category-item {
+            padding: 0.7rem 1.2rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border-radius: 50px;
+            margin: 0 0.5rem;
+            white-space: nowrap;
+            font-size: 1.05rem;
+        }
+        
+        .category-item:hover {
+            color: var(--primary-color);
+        }
+        
+        .category-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* 将每个类别对应不同的颜色 */
+        .category-item[data-category="category-1"].active {
+            background-color: var(--category-1-color);
+        }
+        
+        .category-item[data-category="category-2"].active {
+            background-color: var(--category-2-color);
+        }
+        
+        .category-item[data-category="category-3"].active {
+            background-color: var(--category-3-color);
+        }
+        
+        .category-item[data-category="category-4"].active {
+            background-color: var(--category-4-color);
+        }
+        
+        .category-item[data-category="category-5"].active {
+            background-color: var(--category-5-color);
+        }
+        
+        .category-item[data-category="category-6"].active {
+            background-color: var(--category-6-color);
+        }
+        
+        .category-item[data-category="category-7"].active {
+            background-color: var(--category-7-color);
+        }
+        
+        /* 提示词容器 */
+        .prompts-container {
+            max-width: 1200px;
+            margin: 2rem auto 5rem;
+            padding: 0 2rem;
+        }
+        
+        .category-section {
+            margin-bottom: 3rem;
+            display: none;
+        }
+        
+        .category-section.active {
+            display: block;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+        
+        /* 给每个类别头部一个独特的颜色 */
+        .category-section[data-category="category-1"] .category-icon {
+            background-color: var(--category-1-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-2"] .category-icon {
+            background-color: var(--category-2-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-3"] .category-icon {
+            background-color: var(--category-3-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-4"] .category-icon {
+            background-color: var(--category-4-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-5"] .category-icon {
+            background-color: var(--category-5-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-6"] .category-icon {
+            background-color: var(--category-6-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-7"] .category-icon {
+            background-color: var(--category-7-color);
+            color: white;
+        }
+        
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        /* 提示词卡片设计 */
+        .prompt-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* 给每个类别的卡片边框设置不同颜色 */
+        .category-section[data-category="category-1"] .prompt-card {
+            border-top: 4px solid var(--category-1-color);
+        }
+        
+        .category-section[data-category="category-2"] .prompt-card {
+            border-top: 4px solid var(--category-2-color);
+        }
+        
+        .category-section[data-category="category-3"] .prompt-card {
+            border-top: 4px solid var(--category-3-color);
+        }
+        
+        .category-section[data-category="category-4"] .prompt-card {
+            border-top: 4px solid var(--category-4-color);
+        }
+        
+        .category-section[data-category="category-5"] .prompt-card {
+            border-top: 4px solid var(--category-5-color);
+        }
+        
+        .category-section[data-category="category-6"] .prompt-card {
+            border-top: 4px solid var(--category-6-color);
+        }
+        
+        .category-section[data-category="category-7"] .prompt-card {
+            border-top: 4px solid var(--category-7-color);
+        }
+        
+        .prompt-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .prompt-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--dark-color);
+        }
+        
+        .prompt-description {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        
+        .prompt-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        
+        .prompt-length {
+            font-size: 0.85rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+        }
+        
+        .prompt-length-icon {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .view-prompt-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .view-prompt-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        /* 给每个类别的按钮设置不同颜色 */
+        .category-section[data-category="category-1"] .view-prompt-btn {
+            background-color: var(--category-1-color);
+        }
+        
+        .category-section[data-category="category-2"] .view-prompt-btn {
+            background-color: var(--category-2-color);
+        }
+        
+        .category-section[data-category="category-3"] .view-prompt-btn {
+            background-color: var(--category-3-color);
+        }
+        
+        .category-section[data-category="category-4"] .view-prompt-btn {
+            background-color: var(--category-4-color);
+        }
+        
+        .category-section[data-category="category-5"] .view-prompt-btn {
+            background-color: var(--category-5-color);
+        }
+        
+        .category-section[data-category="category-6"] .view-prompt-btn {
+            background-color: var(--category-6-color);
+        }
+        
+        .category-section[data-category="category-7"] .view-prompt-btn {
+            background-color: var(--category-7-color);
+        }
+        
+        /* 提示词悬浮弹窗 */
+        .prompt-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .prompt-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .prompt-modal-content {
+            background-color: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .prompt-modal.active .prompt-modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--primary-color);
+        }
+        
+        .prompt-text {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            white-space: pre-line;
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        
+        .prompt-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .copy-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 30px;
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            top: -100px;
+            left: 10%;
+            opacity: 0.1;
+        }
+        
+        .footer::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 10px;
+            background-color: var(--accent-color);
+            bottom: 30px;
+            right: 10%;
+            opacity: 0.3;
+            transform: rotate(-5deg);
+        }
+        
+        .footer p {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .social-links li {
+            margin: 0 1.2rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-links a:hover {
+            color: var(--dark-color);
+            background-color: var(--primary-color);
+        }
+
+        
+        
+        /* "返回顶部"按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            background-color: var(--secondary-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .category-list {
+                padding: 0.5rem;
+                overflow-x: auto;
+            }
+            
+            .category-item {
+                white-space: nowrap;
+                padding: 0.6rem 1rem;
+                margin: 0 0.3rem;
+                font-size: 0.9rem;
+            }
+            
+            .prompts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .prompt-modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            
+            .modal-title {
+                font-size: 1.3rem;
+            }
+        }
+        footer {
+    margin-top: auto; /* Push the footer to the bottom */
+}
+        
+    </style>
+</head>
+<body>
+    <!-- Memphis风格元素 -->
+    <div class="memphis-dot" id="dot1"></div>
+    <div class="memphis-dot" id="dot2"></div>
+    <div class="memphis-dot" id="dot3"></div>
+    <div class="memphis-zigzag" id="zigzag1"></div>
+    <div class="memphis-zigzag" id="zigzag2"></div>
+    <div class="memphis-square" id="square1"></div>
+    <div class="memphis-square" id="square2"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">课程<span>开发</span>工具</a>
+        <ul class="nav-links">
+            
+            <li><a href="tools.html">工具导航</a></li>
+            <li><a href="ai-prompts.html" class="active">AI提示词库</a></li>
+            <li><a href="templates.html">资源模板</a></li>
+            <li><a href="faq.html">常见问题</a></li>
+            <li><a href="about.html">关于本站</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 页面标题 -->
+    <div class="page-title">
+        <h1>AI提示词库</h1>
+        <p>为课程开发者量身定制的AI提示词，让您的课程开发更高效</p>
+    </div>
+    
+    <!-- 主分类导航 -->
+    <div class="category-nav">
+        <ul class="category-list">
+            <li class="category-item active" data-category="category-1">选题定位</li>
+            <li class="category-item" data-category="category-2">内容萃取</li>
+            <li class="category-item" data-category="category-3">课程大纲提炼</li>
+            <li class="category-item" data-category="category-4">逐字稿撰写</li>
+            <li class="category-item" data-category="category-5">课程优化提升</li>
+            <li class="category-item" data-category="category-6">营销与传播</li>
+            <li class="category-item" data-category="category-7">定制化提示词</li>
+        </ul>
+    </div>
+    
+    <!-- 提示词内容 -->
+    <div class="prompts-container">
+        <!-- 第一类：选题定位 -->
+        <div class="category-section active" data-category="category-1">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </div>
+                <h2 class="category-title">选题定位</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 示例提示词卡片1-1 -->
+                <div class="prompt-card" data-prompt-id="1.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">1.1 市场需求分析</h3>
+                        <p class="prompt-description">帮助您分析特定领域的市场需求，识别目标受众痛点，探索最具潜力的课程方向。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 示例提示词卡片1-2 -->
+                <div class="prompt-card" data-prompt-id="1.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">1.2 选题差异化定位</h3>
+                        <p class="prompt-description">帮助您分析特定领域的市场需求，识别目标受众痛点，探索最具潜力的课程方向。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 示例提示词卡片1-3 -->
+                <div class="prompt-card" data-prompt-id="1.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">1.3 选题验证</h3>
+                        <p class="prompt-description">帮助您验证选题的有效性、价值型、落地性等。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第二类：内容萃取 -->
+        <div class="category-section" data-category="category-2">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <h2 class="category-title">内容萃取</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 提示词卡片2-1 -->
+                <div class="prompt-card" data-prompt-id="2.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">2.1 核心概念提取</h3>
+                        <p class="prompt-description">从复杂资料中提取关键知识点，整理成结构化内容，便于课程开发。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片2-2 -->
+                <div class="prompt-card" data-prompt-id="2.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">2.2 案例与实例提取</h3>
+                        <p class="prompt-description">基于核心概念创建生动的案例和故事，增强课程内容的可理解性和吸引力。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片2-3 -->
+                <div class="prompt-card" data-prompt-id="2.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">2.3 方法论提炼</h3>
+                        <p class="prompt-description">将抽象理论转化为具体实践步骤，帮助学员真正应用所学知识。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第三类：课程大纲提炼 -->
+        <div class="category-section" data-category="category-3">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </div>
+                <h2 class="category-title">课程大纲提炼</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 提示词卡片3-1 -->
+                <div class="prompt-card" data-prompt-id="3.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">3.1 整体课程结构设计</h3>
+                        <p class="prompt-description">帮助您构建逻辑清晰、循序渐进的知识框架，确保课程内容符合学习认知规律。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片3-2 -->
+                <div class="prompt-card" data-prompt-id="3.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">3.2 单节课详细大纲</h3>
+                        <p class="prompt-description">设计每节课的详细脚本，确保知识点拆解透彻，平衡知识密度与学员体验</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片3-3 -->
+                <div class="prompt-card" data-prompt-id="3.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">3.3 课程难点突破设计</h3>
+                        <p class="prompt-description">通过预判知识难点、设计可视化案例/类比/互动练习等教学手段，将抽象复杂的概念转化为可操作步骤</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第四类：逐字稿撰写 -->
+        <div class="category-section" data-category="category-4">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </div>
+                <h2 class="category-title">逐字稿撰写</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 提示词卡片4-1 -->
+                <div class="prompt-card" data-prompt-id="4.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">4.1 开场白创作</h3>
+                        <p class="prompt-description">撰写吸引人的课程开场白，迅速抓住学员注意力并建立学习动机。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片4-2 -->
+                <div class="prompt-card" data-prompt-id="4.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">4.2 核心内容讲解稿</h3>
+                        <p class="prompt-description">将专业知识转化为清晰易懂的讲解稿，保持通俗与专业的平衡。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片4-3 -->
+                <div class="prompt-card" data-prompt-id="4.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">4.3 案例剖析脚本</h3>
+                        <p class="prompt-description">通过真实场景拆解，帮助学员快速理解核心方法论，强化知识迁移能力</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 提示词卡片4-4 -->
+                <div class="prompt-card" data-prompt-id="4.4">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">4.4 总结与行动指南</h3>
+                        <p class="prompt-description">撰写有效的课程总结和行动指南，帮助学员应用所学并保持学习动力。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第五类：课程优化提升 -->
+        <div class="category-section" data-category="category-5">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <h2 class="category-title">课程优化提升</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 提示词卡片5-1 -->
+                <div class="prompt-card" data-prompt-id="5.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">5.1 互动环节设计</h3>
+                        <p class="prompt-description">帮助您设计课程互动形式，提升学员参与度，打造沉浸式学习体验。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片5-2 -->
+                <div class="prompt-card" data-prompt-id="5.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">5.2 课程评估与反馈设计</h3>
+                        <p class="prompt-description">帮助您制定科学的评估标准，收集学员反馈，持续优化课程质量。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片5-3 -->
+                <div class="prompt-card" data-prompt-id="5.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">5.3 常见问题解答库</h3>
+                        <p class="prompt-description">帮助您整理高频问题与专业解答，提升学员满意度。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第六类：营销与传播 -->
+        <div class="category-section" data-category="category-6">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </div>
+                <h2 class="category-title">营销与传播</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 提示词卡片6-1 -->
+                <div class="prompt-card" data-prompt-id="6.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">6.1 课程亮点提炼</h3>
+                        <p class="prompt-description">提炼课程独特卖点和核心价值，形成有吸引力的营销信息。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片6-2 -->
+                <div class="prompt-card" data-prompt-id="6.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">6.2 课程介绍文案</h3>
+                        <p class="prompt-description">撰写吸引人的课程介绍文案，突出价值主张和学习收益。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片6-3 -->
+                <div class="prompt-card" data-prompt-id="6.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">6.3 社交媒体宣传文案</h3>
+                        <p class="prompt-description">为不同社交平台生成课程推广内容，提高曝光度和转化率。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第七类：定制化提示词 -->
+        <div class="category-section" data-category="category-7">
+            <div class="category-header">
+                <div class="category-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                </div>
+                <h2 class="category-title">定制化提示词</h2>
+            </div>
+            <div class="prompts-grid">
+                <!-- 提示词卡片7-1 -->
+                <div class="prompt-card" data-prompt-id="7.1">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">7.1 特殊教学场景提示词</h3>
+                        <p class="prompt-description">帮助您针对不同教学场景设计适配策略，提升教学效果</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>较长</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片7-2 -->
+                <div class="prompt-card" data-prompt-id="7.2">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">7.2 垂直领域专业内容提示词</h3>
+                        <p class="prompt-description">帮助您生成特定行业或学科的专业知识，确保课程内容的深度与准确性。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示词卡片7-3 -->
+                <div class="prompt-card" data-prompt-id="7.3">
+                    <div class="prompt-content">
+                        <h3 class="prompt-title">7.3 内容更新迭代提示词</h3>
+                        <p class="prompt-description">帮助您跟踪行业动态，优化课程内容，保持知识的新鲜度和竞争力。</p>
+                        <div class="prompt-meta">
+                            <div class="prompt-length">
+                                <span class="prompt-length-icon">📏</span>
+                                <span>中等长度</span>
+                            </div>
+                            <button class="view-prompt-btn">查看提示词</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 提示词悬浮弹窗 -->
+    <div class="prompt-modal" id="promptModal">
+        <div class="prompt-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">提示词标题</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="prompt-text" id="promptText">
+                <!-- 实际提示词内容将通过JavaScript动态插入 -->
+                1.1 市场需求分析
+                
+                分析【主题领域】市场中的学习需求，识别以下内容：
+                1. 目标受众最关心的3-5个痛点问题
+                2. 当前市场上类似课程的优缺点分析
+                3. 最具潜力的细分领域和知识点
+                4. 基于以上分析，推荐2-3个最适合开发的课程选题方向
+            </div>
+            <div class="prompt-actions">
+                <button class="copy-btn" id="copyBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    复制提示词
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 复制成功提示 -->
+    <div class="success-message" id="successMessage">
+        提示词已复制到剪贴板！
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top">↑</div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>© 2025 课程开发工具导航站 | 专业教学设计资源</p>
+        <p>本站保留所有解释权</p>
+    
+    </footer>
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类导航功能
+            const categoryItems = document.querySelectorAll('.category-item');
+            const categorySections = document.querySelectorAll('.category-section');
+            
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 移除所有active类
+                    categoryItems.forEach(cat => cat.classList.remove('active'));
+                    categorySections.forEach(section => section.classList.remove('active'));
+                    
+                    // 添加active类到当前选中项
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    const selectedSection = document.querySelector(`.category-section[data-category="${category}"]`);
+                    if (selectedSection) {
+                        selectedSection.classList.add('active');
+                    }
+                    
+                    // 滚动到分类区域
+                    const promptsContainer = document.querySelector('.prompts-container');
+                    promptsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+            
+            // 提示词模态框功能
+            const promptCards = document.querySelectorAll('.prompt-card');
+            const promptModal = document.getElementById('promptModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalTitle = document.getElementById('modalTitle');
+            const promptText = document.getElementById('promptText');
+            const copyBtn = document.getElementById('copyBtn');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 提示词数据 - 这里只是示例，实际开发中需要替换为真实数据
+            const promptsData = {
+                "1.1": {
+                    title: "1.1 市场需求分析",
+                    text: `分析【主题领域】市场中的学习需求，识别以下内容：
+1. 目标受众最关心的3-5个痛点问题
+2. 当前市场上类似课程的优缺点分析
+3. 最具潜力的细分领域和知识点
+4. 基于以上分析，推荐2-3个最适合开发的课程选题方向`
+                },
+                "1.2": {
+        title: "1.2 选题差异化定位",
+        text: `请帮我评估【课程选题】的差异化定位：
+1. 分析市场上已有的类似课程
+2. 识别这些课程未充分满足的用户需求
+3. 针对我的目标受众【目标受众描述】，提出3个差异化角度
+4. 结合我的专业背景【个人专业/经验描述】，推荐最适合的差异化定位`
+    },
+    "1.3": {
+        title: "1.3 选题验证",
+        text: `请帮我验证【课程选题】的可行性和潜力：
+1. 该选题能解决的具体问题及其严重程度
+2. 目标受众的规模和付费意愿评估
+3. 内容开发的难度和资源需求
+4. 该选题的生命周期和长期价值
+5. 基于以上分析，给出综合评分(1-10)并提供优化建议`
+    },
+    // 继续添加其他所有提示词
+    "2.1": {
+        title: "2.1 知识点提取",
+        text: `请从以下【原始资料/文本】中提取最关键的概念和知识点：
+1. 识别5-8个核心概念
+2. 每个概念的简洁定义(30字以内)
+3. 概念之间的逻辑关系
+4. 按学习顺序排列这些概念
+5. 为每个概念标注重要程度(1-5星)
+                                    
+【原始资料/文本】`
+    },
+    "2.2": {
+        title: "2.2 案例与实例提取",
+        text: `分析以下【原始资料/文本】，提取最有价值的案例和实例：
+1. 识别3-5个能有效说明核心概念的案例
+2. 每个案例的关键要素和情境描述
+3. 案例中蕴含的原理或方法
+4. 案例的教学价值和适用场景
+5. 如何将案例改编得更加生动或贴近目标受众【目标受众描述】
+                                    
+【原始资料/文本】`
+    },
+    "2.3": {
+        title: "2.3 方法论提炼",
+        text: `从以下【原始资料/文本】中提炼出实用的方法论和流程：
+1. 识别2-3个核心方法或流程
+2. 将每个方法分解为清晰的步骤(5-7步为宜)
+3. 每个步骤的关键点和注意事项
+4. 方法应用的条件和限制
+5. 判断方法有效性的标准或指标
+                                    
+【原始资料/文本】`
+    },
+    //san
+    "3.1": {
+        title: "3.1 整体课程结构设计",
+        text: `为【课程主题】设计一个全面且有逻辑的课程大纲：
+1. 课程总体目标和学习成果
+2. 3-5个主要模块，每个模块的核心目标
+3. 每个模块下的2-4个具体课时
+4. 每个课时的学习目标、内容要点和预计时长
+5. 模块之间的逻辑关系和进阶路径
+6. 适合的教学方式和互动环节建议`
+    },
+    "3.2": {
+        title: "3.2 单节课详细大纲",
+        text: `为【课程主题】的【具体课时】创建详细大纲：
+1. 本课时的具体学习目标(3-5个)
+2. 导入环节设计(5分钟)
+3. 核心内容分段(3-4个内容块)
+4. 每个内容块的：
+   - 关键知识点(2-3个)
+   - 配套案例或演示
+   - 互动或练习环节
+5. 总结与复习环节(5分钟)
+6. 课后作业或延伸阅读建议`
+    },
+    "3.3": {
+        title: "3.3 课程难点突破设计",
+        text: `分析【课程主题】中的学习难点，并设计有效的突破方案：
+1. 识别3-5个学习者容易困惑或卡壳的难点
+2. 每个难点的根本原因分析
+3. 针对每个难点的具体讲解策略：
+   - 类比或比喻
+   - 视觉化呈现方式
+   - 渐进式练习设计
+   - 常见误区提示
+4. 检验理解的问题设计`
+    },
+    //si
+    "4.1": {
+        title: "4.1 开场白创作",
+        text: `为【课程主题】的【具体课时】创作一个引人入胜的开场白：
+1. 目标受众：【目标受众描述】
+2. 课程风格：【偏学术/实用/轻松等风格】
+3. 开场白应包含：
+   - 吸引注意的开头(可用问题/数据/故事)
+   - 本节课价值的简明陈述
+   - 学习者将获得的具体收益
+   - 内容概览和学习路线指引
+   - 与学习者建立连接的元素
+
+请创作一段约300字的开场白，语言自然流畅，有【教学风格】的特点。`
+    },
+    "4.2": {
+        title: "4.2 核心内容讲解稿",
+        text: `为【课程主题】的【具体概念/方法】创作讲解稿：
+1. 目标：让【目标受众描述】清晰理解该概念/方法
+2. 讲解稿应包含：
+   - 概念的清晰定义和重要性
+   - 2-3个生动的类比或比喻
+   - 实际应用场景和示例
+   - 与相关概念的联系
+   - 常见误解的澄清
+   - 掌握要点的提示
+3. 语言风格：【要求的语言风格】
+4. 长度：约500-800字
+
+请创作一段自然、有教学节奏感的讲解稿，避免说教式表达，注重与学习者的互动感。`
+    },
+    "4.3": {
+        title: "4.3 案例剖析脚本",
+        text: `为【课程主题】中的【具体案例】创作一个深入剖析的讲解脚本：
+1. 案例背景简介(50-100字)
+2. 案例关键情节或数据展示(100-150字)
+3. 案例分析过程：
+   - 表面现象描述
+   - 深层原因分析
+   - 原理或方法的应用点
+   - 结果和影响
+4. 从案例中提炼的普适性原则(3-5点)
+5. 引导学习者思考的问题(2-3个)
+
+请用【教学风格】创作一段约600-800字的案例剖析脚本，语言生动，逻辑清晰，突出教学价值。`
+    },
+    "4.4": {
+        title: "4.4 总结与行动指南",
+        text: `为【课程主题】的【具体课时】创作一个有力的总结和行动指南：
+1. 核心知识点回顾(3-5点，每点1-2句话)
+2. 学习者可能的疑惑预设及解答(2-3个)
+3. 具体行动建议：
+   - 立即可实践的小步骤(2-3个)
+   - 中期实践项目(1-2个)
+   - 进阶学习路径
+4. 成功应用的标准或检验方法
+5. 鼓励和期许语
+
+请创作一段约300-400字的总结脚本，语言鼓舞人心，重点突出实践性，帮助学习者将知识转化为能力。`
+    },
+    //wu
+    "5.1": {
+        title: "5.1 互动环节设计",
+        text: `为【课程主题】的【具体课时】设计有效的互动环节：
+1. 设计3-5个不同类型的互动活动：
+   - 思考型问题
+   - 小组讨论题
+   - 实操练习
+   - 案例分析
+   - 头脑风暴
+2. 每个互动的具体流程和引导语
+3. 预计时长和所需材料
+4. 互动目的和预期效果
+5. 可能出现的情况及应对建议`
+    },
+    "5.2": {
+        title: "5.2 课程评估与反馈设计",
+        text: `为【课程主题】设计全面的评估与反馈系统：
+1. 学习者自我评估问卷(5-8个问题)
+2. 课程内容理解检测题(8-10题，不同题型)
+3. 实践应用评估标准(3-5个维度)
+4. 长期效果跟踪方案
+5. 课程改进的反馈收集机制
+
+设计应聚焦于【学习目标】，既能准确评估学习效果，又能为学习者提供有价值的反馈。`
+    },
+    "5.3": {
+        title: "5.3 常见问题解答库",
+        text: `为【课程主题】创建一个全面的FAQ解答库：
+1. 预设10-15个学习者可能提出的问题，包括：
+   - 概念理解类问题
+   - 应用实践类问题
+   - 方法选择类问题
+   - 进阶深入类问题
+   - 边界条件类问题
+2. 为每个问题提供清晰、准确、简洁的答案
+3. 在必要处补充例子或类比
+4. 为复杂问题提供分层解答(基础回答+深入解释)`
+    },
+
+    //liu
+    "6.1": {
+        title: "6.1 课程亮点提炼",
+        text: `分析【课程内容】，提炼最具吸引力的营销亮点：
+1. 3-5个最有价值的核心收益点
+2. 与竞品的关键差异化优势
+3. 最适合强调的目标用户痛点
+4. 可量化的学习成果或案例数据
+5. 适合不同平台的亮点表达方式(社交媒体/网站/EDM)`
+    },
+    "6.2": {
+        title: "6.2 课程介绍文案",
+        text: `为【课程名称】创作一个全面的介绍文案：
+1. 引人注目的标题和副标题
+2. 开场问题或场景(与目标用户痛点共鸣)
+3. 课程价值主张(3-5点核心收益)
+4. 课程内容概览(模块结构和亮点)
+5. 讲师背景和权威性证明
+6. 适合的学习对象描述
+7. 学习成果保证
+8. 促进行动的结束语
+
+文案风格：【要求的风格】
+长度：约800-1000字`
+    },
+    "6.3": {
+        title: "6.3 社交媒体宣传文案",
+        text: `为【课程名称】创作一套社交媒体宣传文案：
+1. 5条简短的平台贴文(每条100-150字)：
+   - 价值导向型
+   - 问题解决型
+   - 案例分享型
+   - 限时优惠型
+   - 用户见证型
+2. 每条贴文包含：
+   - 吸引注意的开头
+   - 核心价值点
+   - 清晰的行动召唤
+   - 2-3个合适的话题标签建议
+3. 适合的配图创意建议`
+    },
+
+    //qi
+    "7.1": {
+        title: "7.1 特殊教学场景提示词",
+        text: `请设计适用于【特殊教学场景】的教学策略和内容：
+场景描述：【描述特殊教学场景，如小班互动/大型讲座/线上直播等】
+目标受众：【受众特点】
+教学目标：【具体教学目标】
+
+请提供：
+1. 该场景下的教学内容调整建议
+2. 教学节奏和互动设计
+3. 可能的挑战和应对方案
+4. 教学效果评估方法`
+    },
+    "7.2": {
+        title: "7.2 垂直领域专业内容提示词",
+        text: `请帮我开发【垂直专业领域】的专业课程内容：
+专业领域：【具体专业领域】
+目标学习者：【专业背景和水平】
+预期应用场景：【学习者将如何应用所学】
+
+请提供：
+1. 该领域最新核心知识体系梳理
+2. 实践技能与理论知识的平衡建议
+3. 行业案例和最佳实践推荐
+4. 专业术语表和解释框架
+5. 进阶学习路径设计`
+    },
+    "7.3": {
+        title: "7.3 内容更新迭代提示词",
+        text: `请帮我更新【课程主题】的内容，使其符合当前最新发展：
+原课程开发时间：【原课程开发年份/月份】
+需要更新的方面：【技术变化/理论发展/市场变化等】
+
+请提供：
+1. 需要保留的经典核心内容
+2. 需要更新或移除的过时内容
+3. 建议添加的新知识点或技能
+4. 案例和实例的更新建议
+5. 整体内容结构的优化调整`
+    },
+
+                // 其他提示词数据会在实际开发中添加
+            };
+            
+            // 打开模态框
+            promptCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const promptId = this.getAttribute('data-prompt-id');
+                    
+                    // 在实际应用中，这里应该从promptsData中获取对应的数据
+                    // 暂时使用固定数据
+                    
+                    if (promptsData[promptId]) {
+                        modalTitle.textContent = promptsData[promptId].title;
+                        promptText.textContent = promptsData[promptId].text;
+                    } else {
+                        modalTitle.textContent = this.querySelector('.prompt-title').textContent;
+                        promptText.textContent = "这里将放置实际的提示词内容...";
+                    }
+                    
+                    promptModal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // 防止背景滚动
+                });
+            });
+            
+            // 关闭模态框
+            modalClose.addEventListener('click', function() {
+                promptModal.classList.remove('active');
+                document.body.style.overflow = ''; // 恢复背景滚动
+            });
+            
+            // 点击模态框外部关闭
+            promptModal.addEventListener('click', function(event) {
+                if (event.target === promptModal) {
+                    promptModal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // 复制提示词功能
+            copyBtn.addEventListener('click', function() {
+                const textToCopy = promptText.textContent;
+                navigator.clipboard.writeText(textToCopy).then(function() {
+                    // 显示成功消息
+                    successMessage.classList.add('show');
+                    
+                    // 3秒后隐藏消息
+                    setTimeout(function() {
+                        successMessage.classList.remove('show');
+                    }, 3000);
+                });
+            });
+            
+            // 返回顶部按钮功能
+            const backToTopBtn = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        
+    </script>
+
+  
+    
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 返回顶部按钮功能
+            const backToTopBtn = document.querySelector('.back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+
+<script>
+    document.addEventListener("contextmenu", function(e) {
+        e.preventDefault(); // Disables right-click
+    });
+</script>
+
+<script>
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) { // F12
+            return false;
+        } else if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { // Ctrl + Shift + I
+            return false;
+        }
+    }
+</script>
+</body>

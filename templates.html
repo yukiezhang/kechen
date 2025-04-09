@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源模板 - 课程开发工具导航站</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        /* 配色方案 - 与index.html保持一致 */
+        :root {
+            --primary-color: #FF4B91;
+            --secondary-color: #5271FF;
+            --accent-color: #FFC83D;
+            --tertiary-color: #00D1C5;
+            --dark-color: #2E1A47;
+            --light-color: #FFFFFF;
+            --bg-color: #F5F0FF;
+            --card-bg: #FFFFFF;
+            --border-color: #E1E4E8;
+            
+            /* 分类色彩编码 */
+            --category-1-color: #FF4B91; /* 需求分析 */
+            --category-2-color: #5271FF; /* 选题定位 */
+            --category-3-color: #FFC83D; /* 课程开发 */
+            --category-4-color: #00D1C5; /* 大纲模板 */
+            --category-5-color: #9D4EDD; /* 课程脚本 */
+            --category-6-color: #FF9966; /* 教材与讲义 */
+            --category-7-color: #4CAF50; /* 改进与迭代 */
+        }
+        
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Memphis风格元素 - 与index.html保持一致 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle at 10% 20%, var(--accent-color) 0.8%, transparent 0.8%),
+                radial-gradient(circle at 30% 70%, var(--tertiary-color) 1%, transparent 1%),
+                radial-gradient(circle at 70% 40%, var(--primary-color) 0.8%, transparent 0.8%),
+                radial-gradient(circle at 90% 90%, var(--secondary-color) 1%, transparent 1%);
+            background-size: 200px 200px;
+            background-position: 0 0, 80px 120px, 160px 50px, 200px 150px;
+        }
+        
+        .memphis-dot {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        .memphis-zigzag {
+            position: absolute;
+            width: 120px;
+            height: 20px;
+            z-index: -1;
+        }
+        
+        .memphis-square {
+            position: absolute;
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background-color: var(--dark-color);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(46, 26, 71, 0.2);
+        }
+        
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            padding: 3rem 0 1.5rem;
+            color: var(--dark-color);
+            position: relative;
+        }
+        
+        .page-title h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background-color: var(--primary-color);
+        }
+        
+        .page-title p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        
+        /* 主分类导航 */
+        .category-nav {
+            padding: 0.8rem 1rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 1.5rem auto;
+            background-color: white;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        .category-list {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            list-style: none;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        
+        .category-item {
+            padding: 0.7rem 1.2rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border-radius: 50px;
+            margin: 0 0.5rem;
+            white-space: nowrap;
+            font-size: 1.05rem;
+        }
+        
+        .category-item:hover {
+            color: var(--primary-color);
+        }
+        
+        .category-item.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* 将每个类别对应不同的颜色 */
+        .category-item[data-category="category-1"].active {
+            background-color: var(--category-1-color);
+        }
+        
+        .category-item[data-category="category-2"].active {
+            background-color: var(--category-2-color);
+        }
+        
+        .category-item[data-category="category-3"].active {
+            background-color: var(--category-3-color);
+        }
+        
+        .category-item[data-category="category-4"].active {
+            background-color: var(--category-4-color);
+        }
+        
+        .category-item[data-category="category-5"].active {
+            background-color: var(--category-5-color);
+        }
+        
+        .category-item[data-category="category-6"].active {
+            background-color: var(--category-6-color);
+        }
+        
+        .category-item[data-category="category-7"].active {
+            background-color: var(--category-7-color);
+        }
+        
+        /* 模板内容容器 */
+        .templates-container {
+            max-width: 1200px;
+            margin: 2rem auto 5rem;
+            padding: 0 2rem;
+        }
+        
+        .category-section {
+            margin-bottom: 3rem;
+            display: none;
+        }
+        
+        .category-section.active {
+            display: block;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            margin-right: 15px;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+        
+        /* 给每个类别头部一个独特的颜色 */
+        .category-section[data-category="category-1"] .category-icon {
+            background-color: var(--category-1-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-2"] .category-icon {
+            background-color: var(--category-2-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-3"] .category-icon {
+            background-color: var(--category-3-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-4"] .category-icon {
+            background-color: var(--category-4-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-5"] .category-icon {
+            background-color: var(--category-5-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-6"] .category-icon {
+            background-color: var(--category-6-color);
+            color: white;
+        }
+        
+        .category-section[data-category="category-7"] .category-icon {
+            background-color: var(--category-7-color);
+            color: white;
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        /* 模板卡片设计 */
+        .template-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* 给每个类别的卡片边框设置不同颜色 */
+        .category-section[data-category="category-1"] .template-card {
+            border-top: 4px solid var(--category-1-color);
+        }
+        
+        .category-section[data-category="category-2"] .template-card {
+            border-top: 4px solid var(--category-2-color);
+        }
+        
+        .category-section[data-category="category-3"] .template-card {
+            border-top: 4px solid var(--category-3-color);
+        }
+        
+        .category-section[data-category="category-4"] .template-card {
+            border-top: 4px solid var(--category-4-color);
+        }
+        
+        .category-section[data-category="category-5"] .template-card {
+            border-top: 4px solid var(--category-5-color);
+        }
+        
+        .category-section[data-category="category-6"] .template-card {
+            border-top: 4px solid var(--category-6-color);
+        }
+        
+        .category-section[data-category="category-7"] .template-card {
+            border-top: 4px solid var(--category-7-color);
+        }
+        
+        .template-preview {
+            height: 120px; /* 减小了图片区域的高度 */
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .preview-icon {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            opacity: 0.5;
+        }
+        
+        .template-format {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .template-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .template-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--dark-color);
+        }
+        
+        .template-description {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        
+        .template-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        
+        .template-size {
+            font-size: 0.85rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+        }
+        
+        .template-size-icon {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .download-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .download-icon {
+            margin-right: 5px;
+        }
+        
+        /* 给每个类别的按钮设置不同颜色 */
+        .category-section[data-category="category-1"] .download-btn {
+            background-color: var(--category-1-color);
+        }
+        
+        .category-section[data-category="category-2"] .download-btn {
+            background-color: var(--category-2-color);
+        }
+        
+        .category-section[data-category="category-3"] .download-btn {
+            background-color: var(--category-3-color);
+        }
+        
+        .category-section[data-category="category-4"] .download-btn {
+            background-color: var(--category-4-color);
+        }
+        
+        .category-section[data-category="category-5"] .download-btn {
+            background-color: var(--category-5-color);
+        }
+        
+        .category-section[data-category="category-6"] .download-btn {
+            background-color: var(--category-6-color);
+        }
+        
+        .category-section[data-category="category-7"] .download-btn {
+            background-color: var(--category-7-color);
+        }
+        
+        /* 下载成功提示 */
+        .success-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            top: -100px;
+            left: 10%;
+            opacity: 0.1;
+        }
+        
+        .footer::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 10px;
+            background-color: var(--accent-color);
+            bottom: 30px;
+            right: 10%;
+            opacity: 0.3;
+            transform: rotate(-5deg);
+        }
+        
+        .footer p {
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        /* "返回顶部"按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            background-color: var(--secondary-color);
+        }
+        
+        /* Memphis元素放置 */
+        #dot1 {
+            width: 90px;
+            height: 90px;
+            top: 12%;
+            left: 8%;
+            background-color: var(--tertiary-color);
+            opacity: 0.6;
+        }
+        
+        #dot2 {
+            width: 50px;
+            height: 50px;
+            bottom: 22%;
+            right: 12%;
+            background-color: var(--secondary-color);
+            opacity: 0.4;
+        }
+        
+        #dot3 {
+            width: 70px;
+            height: 70px;
+            top: 40%;
+            right: 20%;
+            background-color: var(--accent-color);
+            opacity: 0.5;
+        }
+        
+        #zigzag1 {
+            top: 30%;
+            right: 5%;
+            transform: rotate(30deg);
+            background: repeating-linear-gradient(45deg, var(--primary-color), var(--primary-color) 10px, transparent 10px, transparent 20px);
+        }
+        
+        #zigzag2 {
+            bottom: 15%;
+            left: 10%;
+            transform: rotate(-15deg);
+            background: repeating-linear-gradient(45deg, var(--secondary-color), var(--secondary-color) 10px, transparent 10px, transparent 20px);
+        }
+        
+        #square1 {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            right: 22%;
+            background-color: var(--primary-color);
+            opacity: 0.4;
+            transform: rotate(25deg);
+        }
+        
+        #square2 {
+            width: 60px;
+            height: 60px;
+            bottom: 25%;
+            left: 25%;
+            background-color: var(--secondary-color);
+            opacity: 0.3;
+            transform: rotate(-20deg);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .category-list {
+                padding: 0.5rem;
+                overflow-x: auto;
+            }
+            
+            .category-item {
+                white-space: nowrap;
+                padding: 0.6rem 1rem;
+                margin: 0 0.3rem;
+                font-size: 0.9rem;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title h1 {
+                font-size: 2.5rem;
+            }
+            
+            .page-title p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+        }
+    </style>
+    <!-- 添加Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <!-- Memphis风格元素 -->
+    
+    
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">课程<span>开发</span>工具</a>
+        <ul class="nav-links">
+            
+            <li><a href="tools.html">工具导航</a></li>
+            <li><a href="ai-prompts.html">AI提示词库</a></li>
+            <li><a href="templates.html" class="active">资源模板</a></li>
+            <li><a href="faq.html">常见问题</a></li>
+            <li><a href="about.html">关于本站</a></li>
+        </ul>
+    </nav>
+    
+    <!-- 页面标题 -->
+    <div class="page-title">
+        <h1>资源模板</h1>
+        <p>这里提供专业的课程开发模板资源，助您快速开发高质量课程，提升学习体验</p>
+    </div>
+    
+    <!-- 主分类导航 -->
+    <div class="category-nav">
+        <ul class="category-list">
+            <li class="category-item active" data-category="category-1">需求分析</li>
+            <li class="category-item" data-category="category-2">选题定位</li>
+            <li class="category-item" data-category="category-3">课程开发</li>
+            <li class="category-item" data-category="category-4">大纲模板</li>
+            <li class="category-item" data-category="category-5">课程脚本</li>
+            <li class="category-item" data-category="category-6">教材与讲义</li>
+            <li class="category-item" data-category="category-7">改进与迭代</li>
+        </ul>
+    </div>
+    
+    <!-- 模板内容 -->
+    <div class="templates-container">
+        <!-- 第一类：需求分析 -->
+        <div class="category-section active" data-category="category-1">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h2 class="category-title">需求分析</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 需求分析模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">培训需求调查问卷</h3>
+                        <p class="template-description">通系统收集学员真实需求，为课程开发提供科学依据</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>410KB</span>
+                            </div>
+                            <a href="./resource/培训需求调查问卷.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">学习者画像分析表</h3>
+                        <p class="template-description">通过关键特征分析，精准描绘目标学员群体，助力个性化学习方案设计</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>500KB</span>
+                            </div>
+                            <a href="./resource/学习者画像分析表.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">业务与学习需求对应矩阵</h3>
+                        <p class="template-description">清晰关联业务目标与学习需求，确保培训内容紧贴实际工作场景</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>437KB</span>
+                            </div>
+                            <a href="./resource/业务与学习需求对应矩阵.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 这里可以添加更多需求分析模板 -->
+            </div>
+        </div>
+        
+        <!-- 第二类：选题定位 -->
+        <div class="category-section" data-category="category-2">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h2 class="category-title">选题定位</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 选题定位模板1 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">课程目标设计模板（ABCD法）</h3>
+                        <p class="template-description">使用ABCD法（受众、行为、条件、程度）设计明确可测量的学习目标</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>562KB</span>
+                            </div>
+                            <a href="./resource/课程目标设计模板.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 选题定位模板2 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">选题定位表</h3>
+                        <p class="template-description">结合业务痛点和学习目标，科学筛选课程主题，提升培训价值</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>519KB</span>
+                            </div>
+                            <a href="./resource/选题定位表.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 这里可以添加更多选题定位模板 -->
+            </div>
+        </div>
+        
+        <!-- 第三类：课程开发 -->
+        <div class="category-section" data-category="category-3">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h2 class="category-title">课程开发</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 课程开发模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">混合式学习设计矩阵</h3>
+                        <p class="template-description">系统整合线上与线下学习活动，打造高效连贯的混合式学习体验</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>1.1MB</span>
+                            </div>
+                            <a href="./resource/混合式学习设计矩阵.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 课程开发模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">情境式学习设计框架</h3>
+                        <p class="template-description">基于真实工作场景设计任务，帮助学员在模拟实践中掌握核心技能</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>1.1MB</span>
+                            </div>
+                            <a href="./resource/情境式学习设计框架.pdf" class="download-btn" download target="_blank"d>
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                 
+                <!-- 课程开发模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">微课_短课设计蓝图</h3>
+                        <p class="template-description">快速拆解知识点，用短小精悍的内容实现高效聚焦的学习效果</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>674KB</span>
+                            </div>
+                            <a href="./resource/微课_短课设计蓝图.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 课程开发模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">ADDIE模型工作表</h3>
+                        <p class="template-description">分步应用分析、设计、开发、实施、评估五大阶段，结构化推进课程开发</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>809KB</span>
+                            </div>
+                            <a href="./resource/ADDIE模型工作表.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- 课程开发模板5 -->
+                 <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">SAM敏捷开发表</h3>
+                        <p class="template-description">通过迭代优化快速原型，灵活响应需求变化，提升课程开发效率</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>870KB</span>
+                            </div>
+                            <a href="./resource/SAM敏捷开发表.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <!-- 这里可以添加更多课程开发模板 -->
+            </div>
+        </div>
+        
+        <!-- 第四类：大纲模板 -->
+        <div class="category-section" data-category="category-4">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <h2 class="category-title">大纲模板</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 大纲模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">通用型课程大纲模板</h3>
+                        <p class="template-description">灵活适配多主题课程开发，提供标准化框架的同时支持个性化内容调整，降低设计门槛</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>790KB</span>
+                            </div>
+                            <a href="./resource/通用型课程大纲模板.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">领导力发展课程大纲模板</h3>
+                        <p class="template-description">结构化设计领导力培养路径，涵盖战略思维、团队管理、决策能力等核心模块，助力管理者系统性提升</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>1.1M</span>
+                            </div>
+                            <a href="./resource/领导力发展课程大纲模板.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">数字化技能培训课程大纲模板</h3>
+                        <p class="template-description">聚焦数据分析、工具应用与数字思维，快速提升员工数字化素养，适配企业转型需求</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>1.2M</span>
+                            </div>
+                            <a href="./resource/数字化技能培训课程大纲模板.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">销售技能培训课程大纲模板</h3>
+                        <p class="template-description">从客户洞察到成交技巧，覆盖销售全流程核心能力，结合实战演练提升转化效果</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>1.2M</span>
+                            </div>
+                            <a href="./resource/销售技能培训课程大纲模板.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 这里可以添加更多大纲模板 -->
+            </div>
+        </div>
+        
+        <!-- 第五类：课程脚本 -->
+        <div class="category-section" data-category="category-5">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-file-signature"></i>
+                </div>
+                <h2 class="category-title">课程脚本</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 课程脚本模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">DOCX</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">动画分镜头模板</h3>
+                        <p class="template-description">可视化呈现教学内容分镜脚本，规范动画制作的场景、动作与解说词</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>6KB</span>
+                            </div>
+                            <a href="./resource/动画分镜头模板.docx" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">DOCX</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">视频脚本模板</h3>
+                        <p class="template-description">结构化设计教学视频的台词、画面与互动点，确保视频内容逻辑清晰且生动易懂</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>6KB</span>
+                            </div>
+                            <a href="./resource/视频脚本模板.docx" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 这里可以添加更多课程脚本模板 -->
+            </div>
+        </div>
+        
+        <!-- 第六类：教材与讲义 -->
+        <div class="category-section" data-category="category-6">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2 class="category-title">教材与讲义</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 教材与讲义模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">DOCX</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">讲师指南模板</h3>
+                        <p class="template-description">详细标注授课要点、互动环节与时间分配，帮助讲师系统化呈现课程内容</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>8KB</span>
+                            </div>
+                            <a href="./resource/讲师指南模板.docx" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">DOCX</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">学员手册模板</h3>
+                        <p class="template-description">整合课程要点、练习与参考资料，为学员提供系统化的学习支持材料</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>8KB</span>
+                            </div>
+                            <a href="./resource/学员手册模板.docx" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-alt preview-icon"></i>
+                        <span class="template-format">PDF</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">知识点图解模板</h3>
+                        <p class="template-description">将复杂知识转化为直观的视觉图表，帮助学员快速理解核心概念与逻辑关系</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>1.2M</span>
+                            </div>
+                            <a href="./resource/知识点图解模板.pdf" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 这里可以添加更多教材与讲义模板 -->
+            </div>
+        </div>
+        
+        <!-- 第七类：改进与迭代 -->
+        <div class="category-section" data-category="category-7">
+            <div class="category-header">
+                <div class="category-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h2 class="category-title">改进与迭代</h2>
+            </div>
+            <div class="templates-grid">
+                <!-- 改进与迭代模板 -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">DOCX</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">课程优化建议收集表</h3>
+                        <p class="template-description">多维度课程质量评估表，收集学员反馈并量化评估课程效果</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>780KB</span>
+                            </div>
+                            <a href="./resource/课程优化建议收集表.docx" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-preview">
+                        <i class="fas fa-file-word preview-icon"></i>
+                        <span class="template-format">DOCX</span>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">学习者反馈分析模板</h3>
+                        <p class="template-description">多维度收集学习者反馈</p>
+                        <div class="template-meta">
+                            <div class="template-size">
+                                <i class="fas fa-weight-hanging template-size-icon"></i>
+                                <span>780KB</span>
+                            </div>
+                            <a href="./resource/学习者反馈分析模板.docx" class="download-btn" download target="_blank">
+                                <i class="fas fa-download download-icon"></i>
+                                下载模板
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                
+                
+                <!-- 这里可以添加更多改进与迭代模板 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 下载成功提示 -->
+    <div class="success-message" id="successMessage">
+        模板已开始下载！
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop">↑</div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>© 2025 课程开发工具导航站 | 专业教学设计资源</p>
+        <p>本站保留所有解释权</p>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类导航功能
+            const categoryItems = document.querySelectorAll('.category-item');
+            const categorySections = document.querySelectorAll('.category-section');
+            
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 移除所有active类
+                    categoryItems.forEach(cat => cat.classList.remove('active'));
+                    categorySections.forEach(section => section.classList.remove('active'));
+                    
+                    // 添加active类到当前选中项
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    const selectedSection = document.querySelector(`.category-section[data-category="${category}"]`);
+                    if (selectedSection) {
+                        selectedSection.classList.add('active');
+                    }
+                    
+                    // 滚动到分类区域
+                    const templatesContainer = document.querySelector('.templates-container');
+                    templatesContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+            
+            // 下载模板功能
+            const downloadBtns = document.querySelectorAll('.download-btn');
+            const successMessage = document.getElementById('successMessage');
+            
+            downloadBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 显示成功消息
+                    successMessage.classList.add('show');
+                    
+                    // 3秒后隐藏消息
+                    setTimeout(function() {
+                        successMessage.classList.remove('show');
+                    }, 3000);
+                });
+            });
+            
+            // 返回顶部按钮功能
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        
+        // 防止右键点击
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault(); // 禁用右键点击
+            
+        });
+        
+        // 防止F12和检查元素
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) { // F12
+                return false;
+            } else if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { // Ctrl + Shift + I
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
