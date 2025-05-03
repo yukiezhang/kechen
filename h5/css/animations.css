@@ -1,0 +1,285 @@
+/* 动画效果样式表 */
+
+/* 浮动图标动画 */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* 页面淡入效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 页面淡出效果 */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* 向上滑入效果 */
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 向右滑入效果 */
+@keyframes slideRight {
+    from { 
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* 放大效果 */
+@keyframes zoomIn {
+    from { 
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to { 
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 弹跳效果 */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 脉冲效果 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 摇晃效果 */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* 旋转效果 */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 应用动画的类 */
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease forwards;
+}
+
+.slide-right {
+    animation: slideRight 0.5s ease forwards;
+}
+
+.zoom-in {
+    animation: zoomIn 0.5s ease forwards;
+}
+
+.bounce {
+    animation: bounce 1s ease;
+}
+
+.pulse {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.shake {
+    animation: shake 0.5s ease;
+}
+
+.rotate {
+    animation: rotate 2s linear infinite;
+}
+
+/* 延迟动画类 */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* 页面过渡效果 */
+.course-page {
+    opacity: 0;
+}
+
+.course-page.active {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* 特定元素动画 */
+.character-dialogue {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.5s ease forwards;
+}
+
+.drag-item {
+    opacity: 0;
+    animation: zoomIn 0.3s ease forwards;
+}
+
+.map-hotspot {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.emergency-card:hover .card-img img {
+    animation: pulse 1s ease;
+}
+
+.primary-btn:active {
+    animation: pulse 0.3s ease;
+}
+
+/* 验证动画 */
+.option.correct {
+    background-color: rgba(76, 175, 80, 0.2);
+    animation: pulse 0.5s ease;
+}
+
+.option.incorrect {
+    background-color: rgba(244, 67, 54, 0.2);
+    animation: shake 0.5s ease;
+}
+
+/* 成功完成动画 */
+.success-animation {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.success-animation img {
+    animation: bounce 1s ease;
+}
+
+/* 加载动画 */
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid var(--gray);
+    border-bottom-color: var(--primary-color);
+    border-radius: 50%;
+    display: inline-block;
+    animation: rotate 1s linear infinite;
+}
+
+/* 进度条动画 */
+.progress-bar .progress-fill {
+    transition: width 0.5s ease;
+}
+
+/* 收据弹出动画 */
+.modal-content {
+    transform: scale(0.8);
+    opacity: 0;
+}
+
+.modal.active .modal-content {
+    animation: zoomIn 0.3s ease forwards;
+}
+
+/* 卡片翻转效果 */
+.flip-card {
+    perspective: 1000px;
+}
+
+.flip-card-inner {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    backface-visibility: hidden;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+/* 目标达成动画 */
+@keyframes confetti {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x, 0), 100vh) rotate(var(--r, 0));
+        opacity: 0;
+    }
+}
+
+.confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 20px;
+    top: -20px;
+    animation: confetti 5s ease-in-out forwards;
+}
+
+/* 特定内容的动画序列 */
+.animated-list li {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.animated-list li:nth-child(1) { animation: slideUp 0.3s ease 0.1s forwards; }
+.animated-list li:nth-child(2) { animation: slideUp 0.3s ease 0.2s forwards; }
+.animated-list li:nth-child(3) { animation: slideUp 0.3s ease 0.3s forwards; }
+.animated-list li:nth-child(4) { animation: slideUp 0.3s ease 0.4s forwards; }
+.animated-list li:nth-child(5) { animation: slideUp 0.3s ease 0.5s forwards; }
